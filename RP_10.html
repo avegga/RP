@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Загрузка фактов</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f3f4f6;
+    }
+
+    /* ✅ ОСНОВНОЙ КОНТЕЙНЕР С ЗАКЛАДКАМИ */
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* Шапка приложения с закладками */
+    .header {
+      display: flex;
+      padding: 12px 16px;
+      background: #111827;
+      color: #f9fafb;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    /* Закладки */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      background: #1f2937;
+      border-radius: 6px 6px 0 0;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      border: 1px solid #374151;
+    }
+
+    .tab.active {
+      background: #f9fafb;
+      color: #111827;
+    }
+
+    /* ✅ ОСНОВНОЙ КОНТЕЙНЕР С ЛЕВОЙ ПАНЕЛЬЮ И ПРАВОЙ ОБЛАСТЬЮ */
+    .main-content {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ✅ ЛЕВАЯ ПАНЕЛЬ (15% ширины) - НЕЖНО-САЛАТОВЫЙ ЦВЕТ */
+    .sidebar {
+      width: 15%;
+      min-width: 180px;
+      background: #ecfdf5;
+      border-right: 1px solid #e5e7eb;
+      padding: 16px;
+      overflow-y: auto;
+      transition: all 0.3s ease;
+    }
+
+    /* ✅ СКРЫТАЯ БОКОВАЯ ПАНЕЛЬ */
+    .sidebar.hidden {
+      width: 0;
+      min-width: 0;
+      padding: 0;
+      margin: 0;
+      border-right: none;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    /* Адаптация основной области при скрытой панели */
+    .main-content.sidebar-hidden .content-area {
+      width: 100%;
+    }
+
+    .sidebar-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .radio-item:hover {
+      background: #d1fae5;
+    }
+
+    .radio-item.active {
+      background: #dbeafe;
+      border: 1px solid #2563eb;
+    }
+
+    .radio-item input[type="radio"] {
+      margin: 0;
+      accent-color: #059669;
+    }
+
+    .radio-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+      cursor: pointer;
+    }
+
+    /* ✅ ПРАВАЯ ОБЛАСТЬ (85% ширины) */
+    .content-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    /* ✅ КОНТЕНТ ЗАКЛАДОК */
+    .tab-content {
+      display: none;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .tab-content.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Содержимое справочника */
+    .directory-content {
+      flex: 1;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      overflow: auto;
+    }
+
+    .directory-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #111827;
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    /* ✅ СТАРЫЙ ИНТЕРФЕЙС ЗАГРУЗКИ ФАКТОВ */
+    .upload-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 16px 60px;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .panel {
+      background: #ffffff;
+      border-radius: 6px;
+      border: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 80px;
+    }
+
+    .panel-header {
+      padding: 8px 12px;
+      background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-header span {
+      font-size: 12px;
+      font-weight: 400;
+      color: #6b7280;
+    }
+
+    .panel-body {
+      flex: 1;
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 6px 8px;
+      border-bottom: 1px solid #f3f4f6;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #f9fafb;
+      font-weight: 600;
+      font-size: 12px;
+      color: #4b5563;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tr:nth-child(even) td { background: #fcfcfd; }
+
+    .error-cell {
+      color: #dc2626 !important;
+      background-color: #fef2f2 !important;
+      font-weight: 500;
+    }
+
+    .splitter {
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      margin: 4px 0;
+      cursor: row-resize;
+      position: relative;
+    }
+
+    .splitter::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 2px;
+      border-radius: 999px;
+      background: #9ca3af;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 16px;
+      background: #ffffff;
+      border-top: 1px solid #e5e7eb;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .bottom-bar-left, .bottom-bar-right { display: flex; align-items: center; gap: 8px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 6px 12px; border-radius: 4px; border: 1px solid transparent; font-size: 13px; cursor: pointer; background: #e5e7eb; color: #111827; }
+    .btn-primary { background: #2563eb; border-color: #2563eb; color: #ffffff; }
+    .btn:disabled { opacity: 0.5; cursor: default; }
+    input[type="file"] { display: none; }
+    .status { font-size: 12px; color: #6b7280; }
+    .status-ok { color: #16a34a; }
+    .status-error { color: #dc2626; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <!-- ✅ ШАПКА С ЗАКЛАДКАМИ -->
+  <div class="header">
+    <div>Система управления фактами</div>
+    <div class="tabs">
+      <div class="tab active" data-tab="upload">Загрузка фактов</div>
+      <div class="tab" data-tab="directory">Справочник</div>
+    </div>
+  </div>
+
+  <!-- ✅ ОСНОВНОЙ КОНТЕЙНЕР -->
+  <div class="main-content" id="mainContent">
+    <!-- ✅ ЛЕВАЯ ПАНЕЛЬ СО СПРАВОЧНИКОМ (скрыта по умолчанию) -->
+    <div class="sidebar hidden" id="sidebar">
+      <div class="sidebar-title">Справочники</div>
+      <div class="radio-group">
+        <label class="radio-item active" data-section="personnel">
+          <input type="radio" name="directory" value="personnel" checked>
+          <span class="radio-label">Персонал</span>
+        </label>
+        <label class="radio-item" data-section="operations">
+          <input type="radio" name="directory" value="operations">
+          <span class="radio-label">Операции</span>
+        </label>
+        <label class="radio-item" data-section="standards">
+          <input type="radio" name="directory" value="standards">
+          <span class="radio-label">Нормативы</span>
+        </label>
+        <label class="radio-item" data-section="shifts">
+          <input type="radio" name="directory" value="shifts">
+          <span class="radio-label">Смены</span>
+        </label>
+        <label class="radio-item" data-section="schedules">
+          <input type="radio" name="directory" value="schedules">
+          <span class="radio-label">Графики работы</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- ✅ ПРАВАЯ ОБЛАСТЬ -->
+    <div class="content-area">
+      <!-- ✅ ЗАКЛАДКА "ЗАГРУЗКА ФАКТОВ" (старый интерфейс) -->
+      <div id="upload-tab" class="tab-content active">
+        <div class="upload-content">
+          <!-- Весь старый интерфейс загрузки фактов -->
+          <div id="topPanel" class="panel" style="flex-basis: 55%;">
+            <div class="panel-header">
+              <div>Результаты загрузки</div>
+              <span id="successCount">0 записей</span>
+            </div>
+            <div class="panel-body">
+              <table>
+                <thead><tr id="successHeaderRow"></tr></thead>
+                <tbody id="successTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="splitter" class="splitter" title="Потяните, чтобы изменить размер областей"></div>
+
+          <div id="bottomPanel" class="panel" style="flex-basis: 45%;">
+            <div class="panel-header">
+              <div>Ошибки загрузки</div>
+              <span id="errorCount">0 ошибок</span>
+            </div>
+            <div class="panel-body">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 32px;">№</th>
+                    <th>Строка</th>
+                    <th>Описание ошибки</th>
+                    <th>Данные</th>
+                    <th style="min-width: 200px;">Как исправить</th>
+                  </tr>
+                </thead>
+                <tbody id="errorTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ ЗАКЛАДКА "СПРАВОЧНИК" -->
+      <div id="directory-tab" class="tab-content">
+        <div class="directory-content">
+          <div id="directory-title" class="directory-title">Персонал</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Нижняя панель кнопок (только для вкладки загрузки) -->
+  <div class="bottom-bar" id="bottomBar">
+    <div class="bottom-bar-left">
+      <label class="btn btn-primary">
+        Загрузить
+        <input type="file" id="fileInput" accept=".csv" />
+      </label>
+      <button id="clearBtn" class="btn">Очистить</button>
+    </div>
+    <div class="bottom-bar-right">
+      <div class="status" id="statusText">Файл не выбран</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ========== ✅ УПРАВЛЕНИЕ ЗАКЛАДКАМИ С ЛОГИКОЙ ПОКАЗА БОКОВОЙ ПАНЕЛИ ==========
+  const tabs = document.querySelectorAll('.tab');
+  const tabContents = document.querySelectorAll('.tab-content');
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.getElementById('mainContent');
+  const bottomBar = document.getElementById('bottomBar');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      const tabId = tab.dataset.tab;
+      tabContents.forEach(content => content.classList.remove('active'));
+      document.getElementById(tabId + '-tab').classList.add('active');
+
+      if (tabId === 'directory') {
+        sidebar.classList.remove('hidden');
+        mainContent.classList.remove('sidebar-hidden');
+        bottomBar.style.display = 'none';
+      } else {
+        sidebar.classList.add('hidden');
+        mainContent.classList.add('sidebar-hidden');
+        bottomBar.style.display = 'flex';
+      }
+    });
+  });
+
+  // ========== УПРАВЛЕНИЕ СПРАВОЧНИКОМ ==========
+  const radioItems = document.querySelectorAll('.radio-item');
+  const directoryTitle = document.getElementById('directory-title');
+
+  radioItems.forEach(item => {
+    item.addEventListener('click', () => {
+      radioItems.forEach(r => r.classList.remove('active'));
+      item.classList.add('active');
+      
+      const sectionName = item.dataset.section === 'personnel' ? 'Персонал' :
+                         item.dataset.section === 'operations' ? 'Операции' :
+                         item.dataset.section === 'standards' ? 'Нормативы' :
+                         item.dataset.section === 'shifts' ? 'Смены' :
+                         'Графики работы';
+      
+      directoryTitle.textContent = sectionName;
+    });
+  });
+
+  // ========== ✅ ИСПРАВЛЕННЫЙ КОД ЗАГРУЗКИ ФАКТОВ ==========
+  const topPanel = document.getElementById('topPanel');
+  const bottomPanel = document.getElementById('bottomPanel');
+  const splitter = document.getElementById('splitter');
+  const fileInput = document.getElementById('fileInput');
+  const clearBtn = document.getElementById('clearBtn');
+  const statusText = document.getElementById('statusText');
+  const successHeaderRow = document.getElementById('successHeaderRow');
+  const successTableBody = document.getElementById('successTableBody');
+  const errorTableBody = document.getElementById('errorTableBody');
+  const successCount = document.getElementById('successCount');
+  const errorCount = document.getElementById('errorCount');
+
+  let successData = [];
+  let errorData = [];
+  let columnNames = [];
+  let columnTypes = [];
+  let tempSuccessData = [];
+
+  // Перетаскивание линейки
+  let isResizing = false;
+  splitter.addEventListener('mousedown', () => {
+    isResizing = true;
+    document.body.style.cursor = 'row-resize';
+  });
+  document.addEventListener('mouseup', () => {
+    isResizing = false;
+    document.body.style.cursor = 'default';
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!isResizing) return;
+    const container = document.querySelector('.upload-content');
+    const rect = container.getBoundingClientRect();
+    const offsetY = e.clientY - rect.top;
+    const min = 80;
+    const max = rect.height - 80;
+    const y = Math.min(Math.max(offsetY, min), max);
+    topPanel.style.flexBasis = (y - 3) + 'px';
+    bottomPanel.style.flexBasis = (rect.height - y - 3) + 'px';
+  });
+
+  function getFixRecommendation(type, value) {
+    const t = type.toLowerCase().trim();
+    if (t.startsWith('string') || t.startsWith('text')) return 'Введите любой текст';
+    if (t === 'datetime' || t.includes('date')) return 'Формат: YYYY-MM-DD или YYYY-MM-DD HH:MM:SS (например: 2025-04-01 18:00)';
+    if (t === 'integer') return 'Целое число ≥ 0 (например: 123, 0)';
+    if (t.startsWith('decimal') || t.includes('float') || t.includes('double')) return 'Любое число, точка или запятая как разделитель (например: 123.45, 12,3)';
+    if (t === 'boolean') return 'Y/N, true/false, 0/1, да/нет';
+    return 'Проверьте соответствие типу данных';
+  }
+
+  function validateValueByType(value, type) {
+    if (!type) return { ok: true };
+    const t = type.toLowerCase().trim();
+
+    if (t.startsWith('string') || t.startsWith('text')) return { ok: true };
+
+    if (t === 'datetime' || t.includes('date')) {
+      const d = new Date(value);
+      return { ok: !isNaN(d.getTime()), message: 'Неверный формат даты/времени' };
+    }
+
+    if (t === 'integer') {
+      const n = Number(value);
+      return { ok: Number.isInteger(n) && n >= 0, message: 'Целое неотрицательное число' };
+    }
+
+    if (t.startsWith('decimal') || t.includes('float') || t.includes('double')) {
+      const n = Number(value.replace(',', '.'));
+      return { ok: !isNaN(n), message: 'Число' };
+    }
+
+    if (t === 'boolean') {
+      const v = value.toString().toLowerCase();
+      return { ok: ['y', 'n', 'true', 'false', '0', '1', 'да', 'нет'].includes(v), message: 'Y/N, true/false, 0/1' };
+    }
+
+    return { ok: true };
+  }
+
+  // ✅ ИСПРАВЛЕННАЯ ФУНКЦИЯ ПАРСИНГА CSV
+  function parseCsvWithValidation(text) {
+    // ✅ ИСПРАВЛЕНО: правильный разбор строк (было /\\r?\\n/, стало /\r?\n|\r/)
+    const lines = text.split(/\r?\n|\r/).map(l => l.trim()).filter(l => l.length > 0);
+
+    if (lines.length < 3) {
+      errorData = [{ line: 0, message: 'Нужно минимум 3 строки', fragment: '', fix: 'Добавьте заголовки, типы и данные', type: '' }];
+      return { hasErrors: true, errorCellsByRow: {} };
+    }
+
+    // ✅ ИСПРАВЛЕНО: правильный разбор полей
+    columnNames = lines[0].split(';').map(h => h.trim());
+    columnTypes = lines[1].split(';').map(t => t.trim());
+
+    if (columnTypes.length !== columnNames.length) {
+      errorData = [{ line: 2, message: 'Количество типов ≠ количеству колонок', fragment: lines[1], fix: 'Согласуйте количество типов с заголовками', type: '' }];
+      return { hasErrors: true, errorCellsByRow: {} };
+    }
+
+    tempSuccessData = [];
+    errorData = [];
+    const errorCellsByRow = {};
+
+    for (let i = 2; i < lines.length; i++) {
+      const lineNumber = i + 1;
+      const rawLine = lines[i];
+      const parts = rawLine.split(';').map(p => p.trim()); // ✅ ИСПРАВЛЕНО
+      const rowObj = {};
+      const rowErrors = {};
+
+      if (parts.length !== columnNames.length) {
+        errorData.push({ 
+          line: lineNumber, 
+          message: 'Неверное количество полей', 
+          fragment: rawLine,
+          fix: `Ожидается ${columnNames.length} полей, разделенных ";"`,
+          type: ''
+        });
+        continue;
+      }
+
+      for (let colIndex = 0; colIndex < columnNames.length; colIndex++) {
+        const colName = columnNames[colIndex];
+        const colType = columnTypes[colIndex];
+        const value = parts[colIndex];
+
+        const validation = validateValueByType(value, colType);
+        rowObj[colName] = value;
+
+        if (!validation.ok) {
+          rowErrors[colIndex] = true;
+        }
+      }
+
+      if (Object.keys(rowErrors).length > 0) {
+        errorCellsByRow[i - 2] = rowErrors;
+        errorData.push({
+          line: lineNumber,
+          message: `Ошибки в ${Object.keys(rowErrors).length} поле(ях)`,
+          fragment: rawLine.substring(0, 100) + '...',
+          fix: 'Исправьте значения в соответствии с типами данных (2-я строка)',
+          type: columnTypes.join('; ')
+        });
+      }
+
+      tempSuccessData.push({ data: rowObj, errors: rowErrors });
+    }
+
+    return { hasErrors: errorData.length > 0, errorCellsByRow };
+  }
+
+  function renderTables(showSuccess = true) {
+    successHeaderRow.innerHTML = '';
+    columnNames.forEach(name => {
+      const th = document.createElement('th');
+      th.textContent = name;
+      successHeaderRow.appendChild(th);
+    });
+
+    successTableBody.innerHTML = '';
+    const dataToShow = showSuccess ? tempSuccessData : [];
+    
+    dataToShow.forEach((row, rowIdx) => {
+      const tr = document.createElement('tr');
+      let cellsHtml = '';
+      
+      columnNames.forEach((name, colIdx) => {
+        const value = row.data[name] ?? '';
+        const hasError = row.errors[colIdx];
+        const cellClass = hasError ? 'error-cell' : '';
+        cellsHtml += `<td class="${cellClass}">${value}</td>`;
+      });
+      
+      tr.innerHTML = cellsHtml;
+      successTableBody.appendChild(tr);
+    });
+
+    errorTableBody.innerHTML = '';
+    errorData.forEach((error, idx) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="width: 32px;">${idx + 1}</td>
+        <td>${error.line}</td>
+        <td>${error.message}</td>
+        <td>${error.fragment}</td>
+        <td style="white-space: normal; font-size: 12px; color: #059669;">${error.fix}</td>
+      `;
+      errorTableBody.appendChild(tr);
+    });
+
+    successCount.textContent = dataToShow.length + ' записей';
+    errorCount.textContent = errorData.length + ' ошибок';
+  }
+
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      statusText.textContent = 'Файл не выбран';
+      statusText.className = 'status';
+      return;
+    }
+
+    statusText.textContent = `Загрузка «${file.name}»...`;
+    statusText.className = 'status';
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = parseCsvWithValidation(reader.result);
+      
+      if (result.hasErrors) {
+        successData = tempSuccessData.map(item => item.data);
+        renderTables(true);
+        statusText.textContent = `Загружено с ошибками: ${errorData.length} ошибок`;
+        statusText.className = 'status status-error';
+      } else {
+        successData = tempSuccessData.map(item => item.data);
+        renderTables(true);
+        statusText.textContent = `Загрузка завершена: ${file.name}`;
+        statusText.className = 'status status-ok';
+      }
+    };
+
+    reader.readAsText(file, 'utf-8');
+  });
+
+  clearBtn.addEventListener('click', () => {
+    successData = [];
+    errorData = [];
+    tempSuccessData = [];
+    columnNames = [];
+    columnTypes = [];
+    renderTables();
+    statusText.textContent = 'Результаты очищены';
+    statusText.className = 'status';
+  });
+
+  renderTables();
+</script>
+</body>
+</html>
