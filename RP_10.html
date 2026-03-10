@@ -60,8 +60,8 @@
 
     /* ✅ ЛЕВАЯ ПАНЕЛЬ (15% ширины) - НЕЖНО-САЛАТОВЫЙ ЦВЕТ */
     .sidebar {
-      width: 15%;
-      min-width: 180px;
+      width: 18%;
+      min-width: 200px;
       background: #ecfdf5;
       border-right: 1px solid #e5e7eb;
       padding: 16px;
@@ -94,13 +94,13 @@
       border-bottom: 1px solid #e5e7eb;
     }
 
-    .radio-group {
+    .checkbox-group {
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
 
-    .radio-item {
+    .checkbox-item {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -110,28 +110,25 @@
       transition: background 0.2s;
     }
 
-    .radio-item:hover {
+    .checkbox-item:hover {
       background: #d1fae5;
     }
 
-    .radio-item.active {
-      background: #dbeafe;
-      border: 1px solid #2563eb;
-    }
-
-    .radio-item input[type="radio"] {
+    .checkbox-item input[type="checkbox"] {
       margin: 0;
       accent-color: #059669;
+      width: 16px;
+      height: 16px;
     }
 
-    .radio-label {
+    .checkbox-label {
       font-size: 13px;
       font-weight: 500;
       color: #374151;
       cursor: pointer;
     }
 
-    /* ✅ ПРАВАЯ ОБЛАСТЬ (85% ширины) */
+    /* ✅ ПРАВАЯ ОБЛАСТЬ (82% ширины) */
     .content-area {
       flex: 1;
       display: flex;
@@ -172,7 +169,50 @@
       border-bottom: 2px solid #e5e7eb;
     }
 
-    /* ✅ СТАРЫЙ ИНТЕРФЕЙС ЗАГРУЗКИ ФАКТОВ */
+    .directory-table-wrapper {
+      max-height: calc(100% - 80px);
+      overflow: auto;
+    }
+
+    .directory-message {
+      font-size: 14px;
+      color: #6b7280;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .directory-message-error {
+      color: #dc2626;
+    }
+
+    /* Содержимое анализа */
+    .analysis-content {
+      flex: 1;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      overflow: auto;
+    }
+
+    .analysis-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #111827;
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .analysis-message {
+      font-size: 16px;
+      color: #6b7280;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    /* ✅ ИНТЕРФЕЙС ЗАГРУЗКИ ФАКТОВ */
     .upload-content {
       flex: 1;
       display: flex;
@@ -266,6 +306,71 @@
       background: #9ca3af;
     }
 
+    /* ✅ СТИЛИ ДЛЯ ВКЛАДКИ НАСТРОЕК */
+    .settings-content {
+      flex: 1;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .settings-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .settings-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+
+    .route-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+      background: #ffffff;
+      transition: border-color 0.2s;
+    }
+
+    .route-select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      background: #2563eb;
+      color: #ffffff;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
+    }
+
+    .btn:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
     .bottom-bar {
       position: fixed;
       left: 0;
@@ -282,9 +387,8 @@
     }
 
     .bottom-bar-left, .bottom-bar-right { display: flex; align-items: center; gap: 8px; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 6px 12px; border-radius: 4px; border: 1px solid transparent; font-size: 13px; cursor: pointer; background: #e5e7eb; color: #111827; }
-    .btn-primary { background: #2563eb; border-color: #2563eb; color: #ffffff; }
-    .btn:disabled { opacity: 0.5; cursor: default; }
+    .btn-small { display: inline-flex; align-items: center; justify-content: center; padding: 6px 12px; border-radius: 4px; border: 1px solid transparent; font-size: 13px; cursor: pointer; background: #e5e7eb; color: #111827; }
+    .btn-primary-small { background: #2563eb; border-color: #2563eb; color: #ffffff; }
     input[type="file"] { display: none; }
     .status { font-size: 12px; color: #6b7280; }
     .status-ok { color: #16a34a; }
@@ -299,44 +403,63 @@
     <div class="tabs">
       <div class="tab active" data-tab="upload">Загрузка фактов</div>
       <div class="tab" data-tab="directory">Справочник</div>
+      <div class="tab" data-tab="analysis">Анализ</div>
+      <div class="tab" data-tab="settings">Настройки</div>
     </div>
   </div>
 
   <!-- ✅ ОСНОВНОЙ КОНТЕЙНЕР -->
   <div class="main-content" id="mainContent">
-    <!-- ✅ ЛЕВАЯ ПАНЕЛЬ СО СПРАВОЧНИКОМ (скрыта по умолчанию) -->
+    <!-- ✅ ЛЕВАЯ ПАНЕЛЬ (ДИНАМИЧЕСКИ ПОДГОНЯЕТСЯ ПОД АКТИВНУЮ ЗАКЛАДКУ) -->
     <div class="sidebar hidden" id="sidebar">
-      <div class="sidebar-title">Справочники</div>
-      <div class="radio-group">
-        <label class="radio-item active" data-section="personnel">
-          <input type="radio" name="directory" value="personnel" checked>
-          <span class="radio-label">Персонал</span>
-        </label>
-        <label class="radio-item" data-section="operations">
-          <input type="radio" name="directory" value="operations">
-          <span class="radio-label">Операции</span>
-        </label>
-        <label class="radio-item" data-section="standards">
-          <input type="radio" name="directory" value="standards">
-          <span class="radio-label">Нормативы</span>
-        </label>
-        <label class="radio-item" data-section="shifts">
-          <input type="radio" name="directory" value="shifts">
-          <span class="radio-label">Смены</span>
-        </label>
-        <label class="radio-item" data-section="schedules">
-          <input type="radio" name="directory" value="schedules">
-          <span class="radio-label">Графики работы</span>
-        </label>
+      <!-- ПАНЕЛЬ ДЛЯ СПРАВОЧНИКА -->
+      <div id="directory-sidebar">
+        <div class="sidebar-title">Справочники</div>
+        <div class="radio-group">
+          <label class="radio-item active" data-section="personnel">
+            <input type="radio" name="directory" value="personnel" checked>
+            <span class="radio-label">Персонал</span>
+          </label>
+          <label class="radio-item" data-section="operations">
+            <input type="radio" name="directory" value="operations">
+            <span class="radio-label">Операции</span>
+          </label>
+          <label class="radio-item" data-section="standards">
+            <input type="radio" name="directory" value="standards">
+            <span class="radio-label">Нормативы</span>
+          </label>
+          <label class="radio-item" data-section="shifts">
+            <input type="radio" name="directory" value="shifts">
+            <span class="radio-label">Смены</span>
+          </label>
+          <label class="radio-item" data-section="schedules">
+            <input type="radio" name="directory" value="schedules">
+            <span class="radio-label">Графики работы</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- ПАНЕЛЬ ДЛЯ АНАЛИЗА -->
+      <div id="analysis-sidebar" style="display: none;">
+        <div class="sidebar-title">Анализ</div>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" id="personnel-ratings">
+            <span class="checkbox-label">Рейтинги персонала</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="downtime">
+            <span class="checkbox-label">Простои</span>
+          </label>
+        </div>
       </div>
     </div>
 
     <!-- ✅ ПРАВАЯ ОБЛАСТЬ -->
     <div class="content-area">
-      <!-- ✅ ЗАКЛАДКА "ЗАГРУЗКА ФАКТОВ" (старый интерфейс) -->
+      <!-- ✅ ЗАКЛАДКА "ЗАГРУЗКА ФАКТОВ" -->
       <div id="upload-tab" class="tab-content active">
         <div class="upload-content">
-          <!-- Весь старый интерфейс загрузки фактов -->
           <div id="topPanel" class="panel" style="flex-basis: 55%;">
             <div class="panel-header">
               <div>Результаты загрузки</div>
@@ -379,18 +502,48 @@
       <div id="directory-tab" class="tab-content">
         <div class="directory-content">
           <div id="directory-title" class="directory-title">Персонал</div>
+          <div id="directory-table-wrapper" class="directory-table-wrapper"></div>
+          <div id="directory-message" class="directory-message">
+            Выберите справочник и маршрут к БД, чтобы отобразить данные.
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ ЗАКЛАДКА "АНАЛИЗ" -->
+      <div id="analysis-tab" class="tab-content">
+        <div class="analysis-content">
+          <div id="analysis-title" class="analysis-title">Анализ данных</div>
+          <div id="analysis-message" class="analysis-message">
+            Выберите типы анализа в левой панели для отображения результатов.
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ ЗАКЛАДКА "НАСТРОЙКИ" -->
+      <div id="settings-tab" class="tab-content">
+        <div class="settings-content">
+          <div class="settings-section">
+            <div class="settings-label">Маршрут к БД</div>
+            <select id="dbRouteSelect" class="route-select">
+              <option value="">Не выбран</option>
+            </select>
+          </div>
+          <div style="align-self: flex-start;">
+            <button id="addDbRouteBtn" class="btn">Добавить маршрут БД</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Нижняя панель кнопок (только для вкладки загрузки) -->
+  <!-- ✅ НИЖНЯЯ ПАНЕЛЬ КНОПОК (ТОЛЬКО ДЛЯ ВКЛАДКИ ЗАГРУЗКИ) -->
   <div class="bottom-bar" id="bottomBar">
     <div class="bottom-bar-left">
       <label class="btn btn-primary">
         Загрузить
         <input type="file" id="fileInput" accept=".csv" />
       </label>
+      <button id="saveBtn" class="btn btn-primary">Сохранить</button>
       <button id="clearBtn" class="btn">Очистить</button>
     </div>
     <div class="bottom-bar-right">
@@ -400,12 +553,26 @@
 </div>
 
 <script>
-  // ========== ✅ УПРАВЛЕНИЕ ЗАКЛАДКАМИ С ЛОГИКОЙ ПОКАЗА БОКОВОЙ ПАНЕЛИ ==========
+  // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
+  let successData = [];
+  let errorData = [];
+  let columnNames = [];
+  let columnTypes = [];
+  let tempSuccessData = [];
+  let currentDirHandle = null;
+
+  // Для справочника
+  let directoryPersonnelData = [];
+  let directoryPersonnelColumns = [];
+
+  // ========== ✅ УПРАВЛЕНИЕ ЗАКЛАДКАМИ ==========
   const tabs = document.querySelectorAll('.tab');
   const tabContents = document.querySelectorAll('.tab-content');
   const sidebar = document.getElementById('sidebar');
   const mainContent = document.getElementById('mainContent');
   const bottomBar = document.getElementById('bottomBar');
+  const directorySidebar = document.getElementById('directory-sidebar');
+  const analysisSidebar = document.getElementById('analysis-sidebar');
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -416,14 +583,23 @@
       tabContents.forEach(content => content.classList.remove('active'));
       document.getElementById(tabId + '-tab').classList.add('active');
 
-      if (tabId === 'directory') {
+      if (tabId === 'directory' || tabId === 'analysis') {
         sidebar.classList.remove('hidden');
         mainContent.classList.remove('sidebar-hidden');
         bottomBar.style.display = 'none';
+        
+        // Показываем нужную панель в сайдбаре
+        if (tabId === 'directory') {
+          directorySidebar.style.display = 'block';
+          analysisSidebar.style.display = 'none';
+        } else {
+          directorySidebar.style.display = 'none';
+          analysisSidebar.style.display = 'block';
+        }
       } else {
         sidebar.classList.add('hidden');
         mainContent.classList.add('sidebar-hidden');
-        bottomBar.style.display = 'flex';
+        bottomBar.style.display = tabId === 'upload' ? 'flex' : 'none';
       }
     });
   });
@@ -431,27 +607,223 @@
   // ========== УПРАВЛЕНИЕ СПРАВОЧНИКОМ ==========
   const radioItems = document.querySelectorAll('.radio-item');
   const directoryTitle = document.getElementById('directory-title');
+  const directoryTableWrapper = document.getElementById('directory-table-wrapper');
+  const directoryMessage = document.getElementById('directory-message');
+
+  function clearDirectoryView() {
+    directoryTableWrapper.innerHTML = '';
+  }
+
+  function setDirectoryMessage(text, isError = false) {
+    directoryMessage.textContent = text;
+    directoryMessage.classList.toggle('directory-message-error', isError);
+  }
+
+  function parseSimpleCsv(text) {
+    const lines = text.split(/\r?\n|\r/).filter(l => l.trim().length > 0);
+    if (lines.length === 0) return { columns: [], rows: [] };
+
+    const columns = lines[0].split(';').map(h => h.trim());
+    const rows = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const parts = lines[i].split(';');
+      const row = {};
+      columns.forEach((col, idx) => {
+        row[col] = (parts[idx] || '').trim();
+      });
+      rows.push(row);
+    }
+
+    return { columns, rows };
+  }
+
+  function renderDirectoryPersonnelTable() {
+    clearDirectoryView();
+
+    if (!directoryPersonnelColumns.length || !directoryPersonnelData.length) {
+      setDirectoryMessage('Файл personal.csv пустой или не содержит данных.', true);
+      return;
+    }
+
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const tbody = document.createElement('tbody');
+
+    const headerRow = document.createElement('tr');
+    directoryPersonnelColumns.forEach(col => {
+      const th = document.createElement('th');
+      th.textContent = col;
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+
+    directoryPersonnelData.forEach(row => {
+      const tr = document.createElement('tr');
+      directoryPersonnelColumns.forEach(col => {
+        const td = document.createElement('td');
+        td.textContent = row[col] ?? '';
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    directoryTableWrapper.appendChild(table);
+    setDirectoryMessage('Данные загружены из personal.csv.', false);
+  }
+
+  async function loadPersonnelFromCurrentDbRoute() {
+    clearDirectoryView();
+
+    if (!dbRouteSelect.value) {
+      setDirectoryMessage('Маршрут к БД не выбран. Выберите маршрут на вкладке «Настройки».', true);
+      return;
+    }
+
+    if (!currentDirHandle) {
+      setDirectoryMessage('Невозможно прочитать personal.csv: текущий маршрут к БД не поддерживает прямое чтение файлов. Выберите папку заново через «Добавить маршрут БД».', true);
+      return;
+    }
+
+    try {
+      const fileHandle = await currentDirHandle.getFileHandle('personal.csv');
+      const file = await fileHandle.getFile();
+      const text = await file.text();
+
+      const parsed = parseSimpleCsv(text);
+      directoryPersonnelColumns = parsed.columns;
+      directoryPersonnelData = parsed.rows;
+
+      if (!directoryPersonnelColumns.length) {
+        setDirectoryMessage('personal.csv не содержит заголовка столбцов.', true);
+        return;
+      }
+
+      renderDirectoryPersonnelTable();
+    } catch (e) {
+      console.error('Ошибка чтения personal.csv:', e);
+      setDirectoryMessage('Не удалось прочитать файл personal.csv в выбранной папке. Проверьте его наличие и права доступа.', true);
+    }
+  }
 
   radioItems.forEach(item => {
-    item.addEventListener('click', () => {
+    item.addEventListener('click', async () => {
       radioItems.forEach(r => r.classList.remove('active'));
       item.classList.add('active');
-      
-      const sectionName = item.dataset.section === 'personnel' ? 'Персонал' :
-                         item.dataset.section === 'operations' ? 'Операции' :
-                         item.dataset.section === 'standards' ? 'Нормативы' :
-                         item.dataset.section === 'shifts' ? 'Смены' :
+
+      const sectionKey = item.dataset.section;
+      const sectionName = sectionKey === 'personnel' ? 'Персонал' :
+                         sectionKey === 'operations' ? 'Операции' :
+                         sectionKey === 'standards' ? 'Нормативы' :
+                         sectionKey === 'shifts' ? 'Смены' :
                          'Графики работы';
-      
+
       directoryTitle.textContent = sectionName;
+
+      if (sectionKey === 'personnel') {
+        await loadPersonnelFromCurrentDbRoute();
+      } else {
+        clearDirectoryView();
+        setDirectoryMessage('Для выбранного справочника отображение ещё не реализовано.', false);
+      }
     });
   });
 
-  // ========== ✅ ИСПРАВЛЕННЫЙ КОД ЗАГРУЗКИ ФАКТОВ ==========
+  // ========== УПРАВЛЕНИЕ АНАЛИЗОМ ==========
+  const analysisMessage = document.getElementById('analysis-message');
+  const analysisTitle = document.getElementById('analysis-title');
+
+  document.getElementById('personnel-ratings').addEventListener('change', (e) => {
+    if (e.target.checked) {
+      analysisTitle.textContent = 'Рейтинги персонала';
+      analysisMessage.textContent = 'Анализ рейтингов персонала будет отображён здесь после загрузки данных.';
+    }
+  });
+
+  document.getElementById('downtime').addEventListener('change', (e) => {
+    if (e.target.checked) {
+      analysisTitle.textContent = 'Простои';
+      analysisMessage.textContent = 'Анализ простоев будет отображён здесь после загрузки данных.';
+    }
+  });
+
+  // ========== ЛОГИКА НАСТРОЕК ==========
+  const dbRouteSelect = document.getElementById('dbRouteSelect');
+  const addDbRouteBtn = document.getElementById('addDbRouteBtn');
+
+  function loadDbRoutes() {
+    const savedRoutes = localStorage.getItem('dbRoutes');
+    if (savedRoutes) {
+      const routes = JSON.parse(savedRoutes);
+      dbRouteSelect.innerHTML = '<option value="">Не выбран</option>';
+      routes.forEach(route => {
+        const option = document.createElement('option');
+        option.value = route;
+        option.textContent = route;
+        dbRouteSelect.appendChild(option);
+      });
+    } else {
+      dbRouteSelect.innerHTML = '<option value="">Не выбран</option>';
+    }
+  }
+
+  function saveDbRoutes(routes) {
+    localStorage.setItem('dbRoutes', JSON.stringify(routes));
+  }
+
+  addDbRouteBtn.addEventListener('click', async () => {
+    try {
+      if ('showDirectoryPicker' in window) {
+        const dirHandle = await window.showDirectoryPicker();
+        const routeName = await dirHandle.name;
+        const routePath = `📁 ${routeName}`;
+
+        const currentRoutes = JSON.parse(localStorage.getItem('dbRoutes') || '[]');
+        if (!currentRoutes.includes(routePath)) {
+          currentRoutes.push(routePath);
+          saveDbRoutes(currentRoutes);
+          loadDbRoutes();
+          dbRouteSelect.value = routePath;
+          currentDirHandle = dirHandle;
+          alert(`Добавлен маршрут: ${routePath}`);
+        } else {
+          alert('Этот маршрут уже добавлен');
+          dbRouteSelect.value = routePath;
+          currentDirHandle = dirHandle;
+        }
+      } else {
+        const folderPath = prompt('Введите путь к папке:');
+        if (folderPath && folderPath.trim()) {
+          const routePath = folderPath.trim();
+          const currentRoutes = JSON.parse(localStorage.getItem('dbRoutes') || '[]');
+          if (!currentRoutes.includes(routePath)) {
+            currentRoutes.push(routePath);
+            saveDbRoutes(currentRoutes);
+            loadDbRoutes();
+            dbRouteSelect.value = routePath;
+            alert(`Добавлен маршрут: ${routePath}`);
+          } else {
+            alert('Этот маршрут уже добавлен');
+            dbRouteSelect.value = routePath;
+          }
+        }
+      }
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        console.error('Ошибка выбора папки:', error);
+        alert('Ошибка при выборе папки.');
+      }
+    }
+  });
+
+  // ========== ✅ ЛОГИКА ЗАГРУЗКИ ФАКТОВ ==========
   const topPanel = document.getElementById('topPanel');
   const bottomPanel = document.getElementById('bottomPanel');
   const splitter = document.getElementById('splitter');
   const fileInput = document.getElementById('fileInput');
+  const saveBtn = document.getElementById('saveBtn');
   const clearBtn = document.getElementById('clearBtn');
   const statusText = document.getElementById('statusText');
   const successHeaderRow = document.getElementById('successHeaderRow');
@@ -459,12 +831,6 @@
   const errorTableBody = document.getElementById('errorTableBody');
   const successCount = document.getElementById('successCount');
   const errorCount = document.getElementById('errorCount');
-
-  let successData = [];
-  let errorData = [];
-  let columnNames = [];
-  let columnTypes = [];
-  let tempSuccessData = [];
 
   // Перетаскивание линейки
   let isResizing = false;
@@ -487,16 +853,6 @@
     topPanel.style.flexBasis = (y - 3) + 'px';
     bottomPanel.style.flexBasis = (rect.height - y - 3) + 'px';
   });
-
-  function getFixRecommendation(type, value) {
-    const t = type.toLowerCase().trim();
-    if (t.startsWith('string') || t.startsWith('text')) return 'Введите любой текст';
-    if (t === 'datetime' || t.includes('date')) return 'Формат: YYYY-MM-DD или YYYY-MM-DD HH:MM:SS (например: 2025-04-01 18:00)';
-    if (t === 'integer') return 'Целое число ≥ 0 (например: 123, 0)';
-    if (t.startsWith('decimal') || t.includes('float') || t.includes('double')) return 'Любое число, точка или запятая как разделитель (например: 123.45, 12,3)';
-    if (t === 'boolean') return 'Y/N, true/false, 0/1, да/нет';
-    return 'Проверьте соответствие типу данных';
-  }
 
   function validateValueByType(value, type) {
     if (!type) return { ok: true };
@@ -527,9 +883,7 @@
     return { ok: true };
   }
 
-  // ✅ ИСПРАВЛЕННАЯ ФУНКЦИЯ ПАРСИНГА CSV
   function parseCsvWithValidation(text) {
-    // ✅ ИСПРАВЛЕНО: правильный разбор строк (было /\\r?\\n/, стало /\r?\n|\r/)
     const lines = text.split(/\r?\n|\r/).map(l => l.trim()).filter(l => l.length > 0);
 
     if (lines.length < 3) {
@@ -537,7 +891,6 @@
       return { hasErrors: true, errorCellsByRow: {} };
     }
 
-    // ✅ ИСПРАВЛЕНО: правильный разбор полей
     columnNames = lines[0].split(';').map(h => h.trim());
     columnTypes = lines[1].split(';').map(t => t.trim());
 
@@ -553,14 +906,14 @@
     for (let i = 2; i < lines.length; i++) {
       const lineNumber = i + 1;
       const rawLine = lines[i];
-      const parts = rawLine.split(';').map(p => p.trim()); // ✅ ИСПРАВЛЕНО
+      const parts = rawLine.split(';').map(p => p.trim());
       const rowObj = {};
       const rowErrors = {};
 
       if (parts.length !== columnNames.length) {
-        errorData.push({ 
-          line: lineNumber, 
-          message: 'Неверное количество полей', 
+        errorData.push({
+          line: lineNumber,
+          message: 'Неверное количество полей',
           fragment: rawLine,
           fix: `Ожидается ${columnNames.length} полей, разделенных ";"`,
           type: ''
@@ -608,18 +961,18 @@
 
     successTableBody.innerHTML = '';
     const dataToShow = showSuccess ? tempSuccessData : [];
-    
+
     dataToShow.forEach((row, rowIdx) => {
       const tr = document.createElement('tr');
       let cellsHtml = '';
-      
+
       columnNames.forEach((name, colIdx) => {
         const value = row.data[name] ?? '';
         const hasError = row.errors[colIdx];
         const cellClass = hasError ? 'error-cell' : '';
         cellsHtml += `<td class="${cellClass}">${value}</td>`;
       });
-      
+
       tr.innerHTML = cellsHtml;
       successTableBody.appendChild(tr);
     });
@@ -639,8 +992,112 @@
 
     successCount.textContent = dataToShow.length + ' записей';
     errorCount.textContent = errorData.length + ' ошибок';
+
+    saveBtn.disabled = dataToShow.length === 0;
   }
 
+  // ✅ ФУНКЦИЯ СОЗДАНИЯ CSV ИЗ ДАННЫХ
+  function generateSuccessCsv() {
+    if (tempSuccessData.length === 0) return null;
+
+    let csv = columnNames.join(';') + '\n';
+    csv += columnTypes.join(';') + '\n';
+
+    tempSuccessData.forEach(row => {
+      const values = columnNames.map(col => row.data[col] || '').join(';');
+      csv += values + '\n';
+    });
+
+    return csv;
+  }
+
+  // ✅ ФУНКЦИЯ СОХРАНЕНИЯ ФАЙЛА
+  async function saveSuccessData() {
+    if (tempSuccessData.length === 0) {
+      alert('Нет данных для сохранения');
+      return;
+    }
+
+    try {
+      const csvData = generateSuccessCsv();
+      const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '').replace('T', '_');
+      const filename = `success_data_${timestamp}.csv`;
+
+      const selectedRoute = dbRouteSelect.value;
+
+      if (selectedRoute && currentDirHandle) {
+        try {
+          const fileHandle = await currentDirHandle.getFileHandle(filename, { create: true });
+          const writable = await fileHandle.createWritable();
+          await writable.write(csvData);
+          await writable.close();
+
+          statusText.textContent = `Сохранено: ${filename}`;
+          statusText.className = 'status status-ok';
+          return;
+        } catch (dirError) {
+          console.warn('Не удалось сохранить в выбранную папку:', dirError);
+        }
+      }
+
+      if ('showDirectoryPicker' in window) {
+        try {
+          const dirHandle = await window.showDirectoryPicker();
+          const routeName = await dirHandle.name;
+          const routePath = `📁 ${routeName}`;
+
+          const currentRoutes = JSON.parse(localStorage.getItem('dbRoutes') || '[]');
+          if (!currentRoutes.includes(routePath)) {
+            currentRoutes.push(routePath);
+            saveDbRoutes(currentRoutes);
+            loadDbRoutes();
+            dbRouteSelect.value = routePath;
+          }
+
+          currentDirHandle = dirHandle;
+
+          const fileHandle = await dirHandle.getFileHandle(filename, { create: true });
+          const writable = await fileHandle.createWritable();
+          await writable.write(csvData);
+          await writable.close();
+
+          statusText.textContent = `Сохранено: ${filename}`;
+          statusText.className = 'status status-ok';
+        } catch (error) {
+          if (error.name !== 'AbortError') {
+            throw new Error(`Ошибка сохранения: ${error.message}`);
+          }
+        }
+      } else {
+        const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        statusText.textContent = `Скачано: ${filename}`;
+        statusText.className = 'status status-ok';
+      }
+    } catch (error) {
+      errorData.unshift({
+        line: 0,
+        message: 'Ошибка сохранения файла',
+        fragment: error.message,
+        fix: 'Проверьте права доступа к папке или выберите другую папку',
+        type: ''
+      });
+
+      renderTables(true);
+      statusText.textContent = 'Ошибка сохранения';
+      statusText.className = 'status status-error';
+    }
+  }
+
+  // Обработчики событий
   fileInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) {
@@ -655,7 +1112,7 @@
     const reader = new FileReader();
     reader.onload = () => {
       const result = parseCsvWithValidation(reader.result);
-      
+
       if (result.hasErrors) {
         successData = tempSuccessData.map(item => item.data);
         renderTables(true);
@@ -672,6 +1129,8 @@
     reader.readAsText(file, 'utf-8');
   });
 
+  saveBtn.addEventListener('click', saveSuccessData);
+
   clearBtn.addEventListener('click', () => {
     successData = [];
     errorData = [];
@@ -683,6 +1142,8 @@
     statusText.className = 'status';
   });
 
+  // Инициализация
+  loadDbRoutes();
   renderTables();
 </script>
 </body>
