@@ -60,8 +60,8 @@
 
     /* ✅ ЛЕВАЯ ПАНЕЛЬ (15% ширины) - НЕЖНО-САЛАТОВЫЙ ЦВЕТ */
     .sidebar {
-      width: 18%;
-      min-width: 200px;
+      width: 15%;
+      min-width: 180px;
       background: #ecfdf5;
       border-right: 1px solid #e5e7eb;
       padding: 16px;
@@ -94,13 +94,13 @@
       border-bottom: 1px solid #e5e7eb;
     }
 
-    .checkbox-group {
+    .radio-group {
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
 
-    .checkbox-item {
+    .radio-item {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -110,25 +110,28 @@
       transition: background 0.2s;
     }
 
-    .checkbox-item:hover {
+    .radio-item:hover {
       background: #d1fae5;
     }
 
-    .checkbox-item input[type="checkbox"] {
-      margin: 0;
-      accent-color: #059669;
-      width: 16px;
-      height: 16px;
+    .radio-item.active {
+      background: #dbeafe;
+      border: 1px solid #2563eb;
     }
 
-    .checkbox-label {
+    .radio-item input[type="radio"] {
+      margin: 0;
+      accent-color: #059669;
+    }
+
+    .radio-label {
       font-size: 13px;
       font-weight: 500;
       color: #374151;
       cursor: pointer;
     }
 
-    /* ✅ ПРАВАЯ ОБЛАСТЬ (82% ширины) */
+    /* ✅ ПРАВАЯ ОБЛАСТЬ (85% ширины) */
     .content-area {
       flex: 1;
       display: flex;
@@ -183,33 +186,6 @@
 
     .directory-message-error {
       color: #dc2626;
-    }
-
-    /* Содержимое анализа */
-    .analysis-content {
-      flex: 1;
-      padding: 24px;
-      background: #ffffff;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      overflow: auto;
-    }
-
-    .analysis-title {
-      font-size: 32px;
-      font-weight: 700;
-      color: #111827;
-      text-align: center;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 2px solid #e5e7eb;
-    }
-
-    .analysis-message {
-      font-size: 16px;
-      color: #6b7280;
-      text-align: center;
-      margin-top: 40px;
     }
 
     /* ✅ ИНТЕРФЕЙС ЗАГРУЗКИ ФАКТОВ */
@@ -403,55 +379,36 @@
     <div class="tabs">
       <div class="tab active" data-tab="upload">Загрузка фактов</div>
       <div class="tab" data-tab="directory">Справочник</div>
-      <div class="tab" data-tab="analysis">Анализ</div>
       <div class="tab" data-tab="settings">Настройки</div>
     </div>
   </div>
 
   <!-- ✅ ОСНОВНОЙ КОНТЕЙНЕР -->
   <div class="main-content" id="mainContent">
-    <!-- ✅ ЛЕВАЯ ПАНЕЛЬ (ДИНАМИЧЕСКИ ПОДГОНЯЕТСЯ ПОД АКТИВНУЮ ЗАКЛАДКУ) -->
+    <!-- ✅ ЛЕВАЯ ПАНЕЛЬ СО СПРАВОЧНИКОМ (скрыта по умолчанию) -->
     <div class="sidebar hidden" id="sidebar">
-      <!-- ПАНЕЛЬ ДЛЯ СПРАВОЧНИКА -->
-      <div id="directory-sidebar">
-        <div class="sidebar-title">Справочники</div>
-        <div class="radio-group">
-          <label class="radio-item active" data-section="personnel">
-            <input type="radio" name="directory" value="personnel" checked>
-            <span class="radio-label">Персонал</span>
-          </label>
-          <label class="radio-item" data-section="operations">
-            <input type="radio" name="directory" value="operations">
-            <span class="radio-label">Операции</span>
-          </label>
-          <label class="radio-item" data-section="standards">
-            <input type="radio" name="directory" value="standards">
-            <span class="radio-label">Нормативы</span>
-          </label>
-          <label class="radio-item" data-section="shifts">
-            <input type="radio" name="directory" value="shifts">
-            <span class="radio-label">Смены</span>
-          </label>
-          <label class="radio-item" data-section="schedules">
-            <input type="radio" name="directory" value="schedules">
-            <span class="radio-label">Графики работы</span>
-          </label>
-        </div>
-      </div>
-
-      <!-- ПАНЕЛЬ ДЛЯ АНАЛИЗА -->
-      <div id="analysis-sidebar" style="display: none;">
-        <div class="sidebar-title">Анализ</div>
-        <div class="checkbox-group">
-          <label class="checkbox-item">
-            <input type="checkbox" id="personnel-ratings">
-            <span class="checkbox-label">Рейтинги персонала</span>
-          </label>
-          <label class="checkbox-item">
-            <input type="checkbox" id="downtime">
-            <span class="checkbox-label">Простои</span>
-          </label>
-        </div>
+      <div class="sidebar-title">Справочники</div>
+      <div class="radio-group">
+        <label class="radio-item active" data-section="personnel">
+          <input type="radio" name="directory" value="personnel" checked>
+          <span class="radio-label">Персонал</span>
+        </label>
+        <label class="radio-item" data-section="operations">
+          <input type="radio" name="directory" value="operations">
+          <span class="radio-label">Операции</span>
+        </label>
+        <label class="radio-item" data-section="standards">
+          <input type="radio" name="directory" value="standards">
+          <span class="radio-label">Нормативы</span>
+        </label>
+        <label class="radio-item" data-section="shifts">
+          <input type="radio" name="directory" value="shifts">
+          <span class="radio-label">Смены</span>
+        </label>
+        <label class="radio-item" data-section="schedules">
+          <input type="radio" name="directory" value="schedules">
+          <span class="radio-label">Графики работы</span>
+        </label>
       </div>
     </div>
 
@@ -509,16 +466,6 @@
         </div>
       </div>
 
-      <!-- ✅ ЗАКЛАДКА "АНАЛИЗ" -->
-      <div id="analysis-tab" class="tab-content">
-        <div class="analysis-content">
-          <div id="analysis-title" class="analysis-title">Анализ данных</div>
-          <div id="analysis-message" class="analysis-message">
-            Выберите типы анализа в левой панели для отображения результатов.
-          </div>
-        </div>
-      </div>
-
       <!-- ✅ ЗАКЛАДКА "НАСТРОЙКИ" -->
       <div id="settings-tab" class="tab-content">
         <div class="settings-content">
@@ -571,8 +518,6 @@
   const sidebar = document.getElementById('sidebar');
   const mainContent = document.getElementById('mainContent');
   const bottomBar = document.getElementById('bottomBar');
-  const directorySidebar = document.getElementById('directory-sidebar');
-  const analysisSidebar = document.getElementById('analysis-sidebar');
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -583,19 +528,10 @@
       tabContents.forEach(content => content.classList.remove('active'));
       document.getElementById(tabId + '-tab').classList.add('active');
 
-      if (tabId === 'directory' || tabId === 'analysis') {
+      if (tabId === 'directory') {
         sidebar.classList.remove('hidden');
         mainContent.classList.remove('sidebar-hidden');
         bottomBar.style.display = 'none';
-        
-        // Показываем нужную панель в сайдбаре
-        if (tabId === 'directory') {
-          directorySidebar.style.display = 'block';
-          analysisSidebar.style.display = 'none';
-        } else {
-          directorySidebar.style.display = 'none';
-          analysisSidebar.style.display = 'block';
-        }
       } else {
         sidebar.classList.add('hidden');
         mainContent.classList.add('sidebar-hidden');
@@ -683,6 +619,8 @@
     }
 
     if (!currentDirHandle) {
+      // Маршрут выбран, но дескриптора нет (например, был введён строкой вручную в старой версии).
+      // В этом случае прямой доступ к файлу невозможен.
       setDirectoryMessage('Невозможно прочитать personal.csv: текущий маршрут к БД не поддерживает прямое чтение файлов. Выберите папку заново через «Добавить маршрут БД».', true);
       return;
     }
@@ -729,24 +667,6 @@
         setDirectoryMessage('Для выбранного справочника отображение ещё не реализовано.', false);
       }
     });
-  });
-
-  // ========== УПРАВЛЕНИЕ АНАЛИЗОМ ==========
-  const analysisMessage = document.getElementById('analysis-message');
-  const analysisTitle = document.getElementById('analysis-title');
-
-  document.getElementById('personnel-ratings').addEventListener('change', (e) => {
-    if (e.target.checked) {
-      analysisTitle.textContent = 'Рейтинги персонала';
-      analysisMessage.textContent = 'Анализ рейтингов персонала будет отображён здесь после загрузки данных.';
-    }
-  });
-
-  document.getElementById('downtime').addEventListener('change', (e) => {
-    if (e.target.checked) {
-      analysisTitle.textContent = 'Простои';
-      analysisMessage.textContent = 'Анализ простоев будет отображён здесь после загрузки данных.';
-    }
   });
 
   // ========== ЛОГИКА НАСТРОЕК ==========
@@ -808,6 +728,8 @@
             alert('Этот маршрут уже добавлен');
             dbRouteSelect.value = routePath;
           }
+          // Здесь currentDirHandle остаётся null, т.к. для произвольного текста
+          // дескриптор директории получить нельзя.
         }
       }
     } catch (error) {
@@ -993,6 +915,7 @@
     successCount.textContent = dataToShow.length + ' записей';
     errorCount.textContent = errorData.length + ' ошибок';
 
+    // Обновляем состояние кнопки сохранения
     saveBtn.disabled = dataToShow.length === 0;
   }
 
@@ -1023,9 +946,11 @@
       const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '').replace('T', '_');
       const filename = `success_data_${timestamp}.csv`;
 
+      // Проверяем выбранный маршрут
       const selectedRoute = dbRouteSelect.value;
 
       if (selectedRoute && currentDirHandle) {
+        // Сохраняем в выбранную папку
         try {
           const fileHandle = await currentDirHandle.getFileHandle(filename, { create: true });
           const writable = await fileHandle.createWritable();
@@ -1037,15 +962,18 @@
           return;
         } catch (dirError) {
           console.warn('Не удалось сохранить в выбранную папку:', dirError);
+          // Продолжаем с выбором новой папки
         }
       }
 
+      // Если нет выбранного маршрута или не удалось сохранить - предлагаем выбрать папку
       if ('showDirectoryPicker' in window) {
         try {
           const dirHandle = await window.showDirectoryPicker();
           const routeName = await dirHandle.name;
           const routePath = `📁 ${routeName}`;
 
+          // Добавляем маршрут в список если его нет
           const currentRoutes = JSON.parse(localStorage.getItem('dbRoutes') || '[]');
           if (!currentRoutes.includes(routePath)) {
             currentRoutes.push(routePath);
@@ -1056,6 +984,7 @@
 
           currentDirHandle = dirHandle;
 
+          // Сохраняем файл
           const fileHandle = await dirHandle.getFileHandle(filename, { create: true });
           const writable = await fileHandle.createWritable();
           await writable.write(csvData);
@@ -1069,6 +998,7 @@
           }
         }
       } else {
+        // Fallback - скачиваем файл
         const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -1083,6 +1013,7 @@
         statusText.className = 'status status-ok';
       }
     } catch (error) {
+      // Ошибка сохранения отображается в таблице ошибок
       errorData.unshift({
         line: 0,
         message: 'Ошибка сохранения файла',
